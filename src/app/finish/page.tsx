@@ -14,7 +14,7 @@ export default function FinishPage() {
   const router = useRouter();
 
   useEffect(() => {
-    // 科学的なアニメーションシーケンス
+    // 化学的なアニメーションシーケンス
     const timer1 = setTimeout(() => {
       setAnimationPhase(1);
       setScanningBeams(true);
@@ -80,7 +80,7 @@ export default function FinishPage() {
         </div>
       )}
 
-      {/* 科学的スキャニングビーム */}
+      {/* 化学的スキャニングビーム */}
       {scanningBeams && (
         <div className="absolute inset-0 pointer-events-none">
           {[...Array(4)].map((_, i) => (
@@ -119,7 +119,7 @@ export default function FinishPage() {
         </div>
       )}
 
-      {/* 科学データストリーム */}
+      {/* 化学データストリーム */}
       {dataStream && (
         <div className="absolute inset-0 pointer-events-none">
           {[...Array(6)].map((_, i) => (
@@ -267,7 +267,7 @@ export default function FinishPage() {
                 </div>
                 <p className="text-gray-300 mb-6">
                   探偵として見事にすべての謎を解き明かしました。<br/>
-                  科学の力で真実を暴き、正義を実現しました。
+                  化学の力で真実を暴き、正義を実現しました。
                 </p>
 
                 <div className="bg-yellow-900/30 border-2 border-yellow-400/50 rounded-lg p-4 mb-6">

@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Quiz Box - ログイン",
-  description: "Quiz Boxにログインしてください",
+  title: "化学研究室の謎",
+  description: "化学研究室の謎",
 };
 
 export default function RootLayout({

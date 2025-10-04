@@ -89,6 +89,30 @@ export const useQ3 = () => {
     initializeGrid();
   }, [router]);
 
+  // スクロール時の横表示制御
+  useEffect(() => {
+    const handleScroll = () => {
+      const mainCrossword = document.querySelector('[data-main-crossword]');
+      const stickyCrossword = document.getElementById('sticky-crossword');
+      
+      if (mainCrossword && stickyCrossword) {
+        const rect = mainCrossword.getBoundingClientRect();
+        const isMainVisible = rect.bottom > 100; // 100px のマージンを設ける
+        
+        if (isMainVisible) {
+          stickyCrossword.style.opacity = '0';
+        } else {
+          stickyCrossword.style.opacity = '1';
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // 初期状態をチェック
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const handleCellClick = (row: number, col: number) => {
     if (grid[row][col].isBlack) return;
 
@@ -161,10 +185,8 @@ export const useQ3 = () => {
       moveToNextCell(row, col, currentDirection);
     } else if (e.key === 'Backspace') {
       e.preventDefault();
-      // バックスペース
-      const newGrid = [...grid];
-      newGrid[row][col].value = '';
-      setGrid(newGrid);
+      // 最後から順番に削除
+      deleteFromEnd(row, col, currentDirection);
     } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
       // 矢印キーでの移動
       e.preventDefault();
@@ -250,6 +272,85 @@ export const useQ3 = () => {
     }
   };
 
+  // 現在の方向の単語の範囲を取得
+  const getWordRange = (row: number, col: number, direction: 'horizontal' | 'vertical') => {
+    let startRow = row, startCol = col, endRow = row, endCol = col;
+    
+    if (direction === 'horizontal') {
+      // 横方向の開始点を見つける
+      while (startCol > 0 && !grid[row][startCol - 1].isBlack) {
+        startCol--;
+      }
+      // 横方向の終了点を見つける
+      while (endCol < GRID_COLS - 1 && !grid[row][endCol + 1].isBlack) {
+        endCol++;
+      }
+    } else {
+      // 縦方向の開始点を見つける
+      while (startRow > 0 && !grid[startRow - 1][col].isBlack) {
+        startRow--;
+      }
+      // 縦方向の終了点を見つける
+      while (endRow < GRID_ROWS - 1 && !grid[endRow + 1][col].isBlack) {
+        endRow++;
+      }
+    }
+    
+    return { startRow, startCol, endRow, endCol };
+  };
+
+  // 最後から順番に削除する処理
+  const deleteFromEnd = (row: number, col: number, direction: 'horizontal' | 'vertical') => {
+    const newGrid = [...grid];
+    const { startRow, startCol, endRow, endCol } = getWordRange(row, col, direction);
+    
+    if (direction === 'horizontal') {
+      // 横方向：右から左に削除
+      for (let c = endCol; c >= startCol; c--) {
+        if (newGrid[row][c].value) {
+          newGrid[row][c].value = '';
+          // 削除したセルに移動
+          setSelectedCell({ row, col: c });
+          highlightWord(row, c, direction);
+          break;
+        }
+      }
+    } else {
+      // 縦方向：下から上に削除
+      for (let r = endRow; r >= startRow; r--) {
+        if (newGrid[r][col].value) {
+          newGrid[r][col].value = '';
+          // 削除したセルに移動
+          setSelectedCell({ row: r, col });
+          highlightWord(r, col, direction);
+          break;
+        }
+      }
+    }
+    
+    setGrid(newGrid);
+  };
+
+  // react-simple-keyboard用のハンドラー
+  const handleKeyboardInput = (input: string) => {
+    if (!selectedCell) return;
+
+    const { row, col } = selectedCell;
+    
+    if (input === '{bksp}') {
+      // 最後から順番に削除
+      deleteFromEnd(row, col, currentDirection);
+    } else if (/^[\u30A1-\u30FC]$/.test(input) || /^[ア-ヴー]$/.test(input)) {
+      const newGrid = [...grid];
+      newGrid[row][col].value = input;
+      setGrid(newGrid);
+
+      // 次のセルに移動
+      moveToNextCell(row, col, currentDirection);
+    }
+  };
+
+
   // ABC入力用のハンドラー
   const handleAbcInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -299,5 +400,6 @@ export const useQ3 = () => {
     handleInputChange,
     handleAbcInputChange,
     handleAnswerSubmit,
+    handleKeyboardInput,
   };
 };

@@ -280,7 +280,7 @@ export default function FinishPage() {
                   </p>
                   <div className="bg-yellow-800/50 rounded-lg p-3 border border-yellow-400/30">
                     <code className="text-yellow-200 text-lg font-bold font-mono">
-                      「真実はいつも一つ」
+                      真実はいつも一つ
                     </code>
                   </div>
                   <p className="text-yellow-200/80 text-xs mt-2">

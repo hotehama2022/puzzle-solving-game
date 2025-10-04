@@ -78,3 +78,131 @@ body {
   transform: scale(1.2) rotate(10deg);
   transition: all 0.3s ease;
 }
+
+/* react-simple-keyboard カスタムスタイル */
+.hg-button-custom {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  color: white !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  margin: 3px !important;
+  min-width: 45px !important;
+  height: 45px !important;
+  backdrop-filter: blur(15px) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.hg-button-custom:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.hg-button-custom:active {
+  background: rgba(255, 255, 255, 0.35) !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.hg-button-delete {
+  background: rgba(239, 68, 68, 0.25) !important;
+  border: 1px solid rgba(239, 68, 68, 0.5) !important;
+  color: white !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  border-radius: 8px !important;
+  margin: 3px !important;
+  min-width: 80px !important;
+  height: 45px !important;
+  backdrop-filter: blur(15px) !important;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.2) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-left: auto !important;
+  margin-right: 3px !important;
+}
+
+.hg-button-delete:hover {
+  background: rgba(239, 68, 68, 0.3) !important;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2) !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.hg-theme-default {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 12px !important;
+  max-width: 600px !important;
+  margin: 0 auto !important;
+}
+
+.hg-row {
+  margin-bottom: 6px !important;
+  justify-content: center !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 2px !important;
+}
+
+/* 削除ボタンの行を右寄せ */
+.hg-row:last-child {
+  justify-content: flex-end !important;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .hg-button-custom {
+    min-width: 35px !important;
+    height: 35px !important;
+    font-size: 14px !important;
+    margin: 2px !important;
+  }
+  
+  .hg-button-delete {
+    min-width: 65px !important;
+    height: 35px !important;
+    font-size: 12px !important;
+    margin: 2px !important;
+    margin-left: auto !important;
+    margin-right: 2px !important;
+  }
+  
+  .hg-theme-default {
+    padding: 8px !important;
+    max-width: 100% !important;
+  }
+  
+  .hg-row {
+    margin-bottom: 4px !important;
+    gap: 1px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .hg-button-custom {
+    min-width: 30px !important;
+    height: 30px !important;
+    font-size: 12px !important;
+    margin: 1px !important;
+  }
+  
+  .hg-button-delete {
+    min-width: 60px !important;
+    height: 30px !important;
+    font-size: 10px !important;
+    margin: 1px !important;
+    margin-left: auto !important;
+    margin-right: 1px !important;
+  }
+  
+  .hg-theme-default {
+    padding: 6px !important;
+  }
+}

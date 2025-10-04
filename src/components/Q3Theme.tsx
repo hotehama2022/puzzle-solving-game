@@ -1,6 +1,9 @@
 'use client';
 
+import React from 'react';
 import { useQ3 } from '@/hooks/useQ3';
+import Keyboard from 'react-simple-keyboard';
+import 'react-simple-keyboard/build/css/index.css';
 
 export default function Q3Theme() {
   const {
@@ -8,15 +11,14 @@ export default function Q3Theme() {
     grid,
     selectedCell,
     currentDirection,
-    inputValue,
     abcAnswer,
     validationError,
     isSubmitting,
     handleCellClick,
     handleKeyPress,
-    handleInputChange,
     handleAbcInputChange,
     handleAnswerSubmit,
+    handleKeyboardInput,
   } = useQ3();
 
   if (isLoading) {
@@ -46,8 +48,8 @@ export default function Q3Theme() {
         </div>
 
         <div className="space-y-6">
-          {/* クロスワードグリッド */}
-          <div className="bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/10">
+          {/* メインクロスワードグリッド */}
+          <div className="bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/10" data-main-crossword>
             <h2 className="text-2xl font-semibold text-white mb-6 text-center">⚛️ 分子構造マトリックス</h2>
 
             <div
@@ -98,28 +100,58 @@ export default function Q3Theme() {
                   </span>
                 )}
               </p>
+            </div>
+          </div>
 
-              {/* カタカナ入力フィールド */}
+          {/* スクロール時の横表示クロスワード */}
+          <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-30 hidden lg:block opacity-0 transition-opacity duration-300" id="sticky-crossword">
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-5 border border-white/20 shadow-2xl">
+              <h3 className="text-base font-semibold text-white mb-4 text-center">⚛️ マトリックス</h3>
+              
               <div className="flex justify-center">
-                <input
-                  type="text"
-                  value={inputValue}
-                  onChange={handleInputChange}
-                  placeholder="ひらがな・カタカナを入力"
-                  className="px-3 py-2 bg-white/20 border border-white/30 rounded-lg text-white placeholder-white/50 text-center w-40 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  autoComplete="off"
-                />
+                <div className="grid grid-cols-6 gap-1 bg-gray-800 p-3 rounded-lg">
+                  {grid.map((row, rowIndex) =>
+                    row.map((cell, colIndex) => (
+                      <div
+                        key={`sticky-${rowIndex}-${colIndex}`}
+                        className={`
+                          w-8 h-8 border border-gray-600 flex items-center justify-center text-sm font-bold cursor-pointer relative
+                          ${cell.isBlack
+                            ? 'bg-gray-900'
+                            : cell.isHighlighted
+                              ? 'bg-blue-300 text-black'
+                              : selectedCell?.row === rowIndex && selectedCell?.col === colIndex
+                                ? 'bg-yellow-300 text-black'
+                                : 'bg-white text-black hover:bg-gray-100'
+                          }
+                          transition-all duration-200
+                        `}
+                        onClick={() => handleCellClick(rowIndex, colIndex)}
+                      >
+                        {cell.number && (
+                          <span className="absolute top-0 left-0 text-xs text-gray-600 font-normal" style={{ fontSize: '10px' }}>
+                            {cell.number}
+                          </span>
+                        )}
+                        {!cell.isBlack && (
+                          <span>{cell.value}</span>
+                        )}
+                      </div>
+                    ))
+                  )}
+                </div>
               </div>
-
-              <p className="text-white/60 text-xs">
-                セルをクリックして選択 → 上の入力欄でひらがな・カタカナを入力
-              </p>
-              <p className="text-white/50 text-xs">
-                💡 ひらがなは自動的にカタカナに変換されます
-              </p>
-              <p className="text-white/50 text-xs">
-                💡 同じセルを再クリックで方向切り替え
-              </p>
+              
+              <div className="text-center mt-3">
+                <p className="text-white/90 text-sm">
+                  {currentDirection === 'horizontal' ? '横' : '縦'}
+                  {selectedCell && (
+                    <span className="ml-2 text-yellow-300">
+                      ({selectedCell.row + 1},{selectedCell.col + 1})
+                    </span>
+                  )}
+                </p>
+              </div>
             </div>
           </div>
 
@@ -140,6 +172,76 @@ export default function Q3Theme() {
                   <div><span className="font-bold text-yellow-300">2.</span> 認証や認可に使用される文字列（4文字）</div>
                   <div><span className="font-bold text-yellow-300">3.</span> LANの中で、MACアドレスを元にパケットを転送する装置<br/>（4文字）</div>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          {/* カタカナキーボード */}
+          <div className="bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/10">
+            {/* 使い方説明 */}
+            <div className="text-center space-y-2 mb-4">
+              <p className="text-white/60 text-xs">
+                セルをクリックして選択 → カタカナキーボードで文字を入力
+              </p>
+              <p className="text-white/50 text-xs">
+                💡 カタカナキーボードで直接入力できます
+              </p>
+              <p className="text-white/50 text-xs">
+                💡 同じセルを再クリックで方向切り替え
+              </p>
+              <p className="text-white/50 text-xs">
+                🗑️ 削除ボタンで現在の列・行の最後から順番に削除
+              </p>
+            </div>
+
+            <div className="flex flex-col items-center space-y-4">
+              <div className="bg-white/5 backdrop-blur-lg rounded-xl p-6 border border-white/10 shadow-2xl">
+                <Keyboard
+                  onKeyPress={handleKeyboardInput}
+                  layout={{
+                    'default': [
+                      'ア カ サ タ ナ ハ マ ヤ ラ ワ',
+                      'イ キ シ チ ニ ヒ ミ ユ リ ヲ',
+                      'ウ ク ス ツ ヌ フ ム ヨ ル ン',
+                      'エ ケ セ テ ネ ヘ メ レ ー',
+                      'オ コ ソ ト ノ ホ モ ロ',
+                      'ガ ギ グ ゲ ゴ ザ ジ ズ ゼ ゾ',
+                      'ダ ヂ ヅ デ ド バ ビ ブ ベ ボ',
+                      'パ ピ プ ペ ポ ッ ャ ュ ョ',
+                      '{bksp}'
+                    ]
+                  }}
+                  display={{
+                    'ア': 'ア', 'カ': 'カ', 'サ': 'サ', 'タ': 'タ', 'ナ': 'ナ',
+                    'ハ': 'ハ', 'マ': 'マ', 'ヤ': 'ヤ', 'ラ': 'ラ', 'ワ': 'ワ',
+                    'イ': 'イ', 'キ': 'キ', 'シ': 'シ', 'チ': 'チ', 'ニ': 'ニ',
+                    'ヒ': 'ヒ', 'ミ': 'ミ', 'リ': 'リ',
+                    'ウ': 'ウ', 'ク': 'ク', 'ス': 'ス', 'ツ': 'ツ', 'ヌ': 'ヌ',
+                    'フ': 'フ', 'ム': 'ム', 'ユ': 'ユ', 'ル': 'ル',
+                    'エ': 'エ', 'ケ': 'ケ', 'セ': 'セ', 'テ': 'テ', 'ネ': 'ネ',
+                    'ヘ': 'ヘ', 'メ': 'メ', 'レ': 'レ',
+                    'オ': 'オ', 'コ': 'コ', 'ソ': 'ソ', 'ト': 'ト', 'ノ': 'ノ',
+                    'ホ': 'ホ', 'モ': 'モ', 'ヨ': 'ヨ', 'ロ': 'ロ', 'ヲ': 'ヲ', 'ン': 'ン',
+                    'ガ': 'ガ', 'ギ': 'ギ', 'グ': 'グ', 'ゲ': 'ゲ', 'ゴ': 'ゴ',
+                    'ザ': 'ザ', 'ジ': 'ジ', 'ズ': 'ズ', 'ゼ': 'ゼ', 'ゾ': 'ゾ',
+                    'ダ': 'ダ', 'ヂ': 'ヂ', 'ヅ': 'ヅ', 'デ': 'デ', 'ド': 'ド',
+                    'バ': 'バ', 'ビ': 'ビ', 'ブ': 'ブ', 'ベ': 'ベ', 'ボ': 'ボ',
+                    'パ': 'パ', 'ピ': 'ピ', 'プ': 'プ', 'ペ': 'ペ', 'ポ': 'ポ',
+                    'ー': 'ー', 'ッ': 'ッ', 'ャ': 'ャ', 'ュ': 'ュ', 'ョ': 'ョ',
+                    '{bksp}': '削除'
+                  }}
+                  theme="hg-theme-default hg-layout-default"
+                  buttonTheme={[
+                    {
+                      class: "hg-button-custom",
+                      buttons: "ア カ サ タ ナ ハ マ ヤ ラ ワ イ キ シ チ ニ ヒ ミ リ ウ ク ス ツ ヌ フ ム ユ ル エ ケ セ テ ネ ヘ メ レ オ コ ソ ト ノ ホ モ ヨ ロ ヲ ン ガ ギ グ ゲ ゴ ザ ジ ズ ゼ ゾ ダ ヂ ヅ デ ド バ ビ ブ ベ ボ パ ピ プ ペ ポ ー ッ ャ ュ ョ"
+                    },
+                    {
+                      class: "hg-button-delete",
+                      buttons: "{bksp}"
+                    }
+                  ]}
+                />
               </div>
             </div>
           </div>

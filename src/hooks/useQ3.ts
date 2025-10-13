@@ -25,6 +25,8 @@ export const useQ3 = () => {
   const [abcAnswer, setAbcAnswer] = useState('');
   const [validationError, setValidationError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const router = useRouter();
 
   // クロスワードの初期データ
@@ -88,30 +90,6 @@ export const useQ3 = () => {
     setIsLoading(false);
     initializeGrid();
   }, [router]);
-
-  // スクロール時の横表示制御
-  useEffect(() => {
-    const handleScroll = () => {
-      const mainCrossword = document.querySelector('[data-main-crossword]');
-      const stickyCrossword = document.getElementById('sticky-crossword');
-      
-      if (mainCrossword && stickyCrossword) {
-        const rect = mainCrossword.getBoundingClientRect();
-        const isMainVisible = rect.bottom > 100; // 100px のマージンを設ける
-        
-        if (isMainVisible) {
-          stickyCrossword.style.opacity = '0';
-        } else {
-          stickyCrossword.style.opacity = '1';
-        }
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    handleScroll(); // 初期状態をチェック
-
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const handleCellClick = (row: number, col: number) => {
     if (grid[row][col].isBlack) return;
@@ -354,14 +332,7 @@ export const useQ3 = () => {
   // ABC入力用のハンドラー
   const handleAbcInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    
-    // ひらがなをカタカナに変換
-    let convertedValue = value;
-    convertedValue = convertedValue.replace(/[\u3041-\u3096]/g, (match) => {
-      return String.fromCharCode(match.charCodeAt(0) + 0x60);
-    });
-    
-    setAbcAnswer(convertedValue);
+    setAbcAnswer(value);
   };
 
   // フォーム送信ハンドラー（q2と同じ仕様）
@@ -386,6 +357,60 @@ export const useQ3 = () => {
     }
   };
 
+  // ドラッグ機能
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+    
+    const keyboard = document.getElementById('sticky-keyboard');
+    if (keyboard) {
+      const rect = keyboard.getBoundingClientRect();
+      setDragOffset({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      });
+    }
+  };
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isDragging) return;
+      
+      const keyboard = document.getElementById('sticky-keyboard');
+      if (keyboard) {
+        const newX = e.clientX - dragOffset.x;
+        const newY = e.clientY - dragOffset.y;
+        
+        // 画面境界チェック
+        const maxX = window.innerWidth - keyboard.offsetWidth;
+        const maxY = window.innerHeight - keyboard.offsetHeight;
+        
+        const constrainedX = Math.max(0, Math.min(newX, maxX));
+        const constrainedY = Math.max(0, Math.min(newY, maxY));
+        
+        keyboard.style.left = `${constrainedX}px`;
+        keyboard.style.top = `${constrainedY}px`;
+        keyboard.style.bottom = 'auto';
+      }
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+    };
+
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      document.body.style.userSelect = 'none';
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.body.style.userSelect = '';
+    };
+  }, [isDragging, dragOffset]);
+
   return {
     isLoading,
     grid,
@@ -401,5 +426,6 @@ export const useQ3 = () => {
     handleAbcInputChange,
     handleAnswerSubmit,
     handleKeyboardInput,
+    handleMouseDown,
   };
 };

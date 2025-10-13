@@ -1,52 +1,19 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useFinish } from '@/hooks/useFinish';
 
 export default function FinishPage() {
-  const [showEvidence, setShowEvidence] = useState(false);
-  const [animationPhase, setAnimationPhase] = useState(0);
-  const [explosion, setExplosion] = useState(false);
-  const [scanningBeams, setScanningBeams] = useState(false);
-  const [dataStream, setDataStream] = useState(false);
-  const [molecularAnimation, setMolecularAnimation] = useState(false);
-  const [finalFireworks, setFinalFireworks] = useState(false);
-  const router = useRouter();
-
-  useEffect(() => {
-    // 化学的なアニメーションシーケンス
-    const timer1 = setTimeout(() => {
-      setAnimationPhase(1);
-      setScanningBeams(true);
-    }, 300);
-    
-    const timer2 = setTimeout(() => {
-      setExplosion(true);
-      setMolecularAnimation(true);
-    }, 800);
-    
-    const timer3 = setTimeout(() => {
-      setAnimationPhase(2);
-      setDataStream(true);
-    }, 1500);
-    
-    const timer4 = setTimeout(() => {
-      setAnimationPhase(3);
-    }, 2500);
-    
-    const timer5 = setTimeout(() => {
-      setShowEvidence(true);
-      setFinalFireworks(true);
-    }, 3200);
-
-    return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-      clearTimeout(timer3);
-      clearTimeout(timer4);
-      clearTimeout(timer5);
-    };
-  }, []);
+  const {
+    showEvidence,
+    animationPhase,
+    explosion,
+    scanningBeams,
+    dataStream,
+    molecularAnimation,
+    finalFireworks,
+    navigateToExplanation,
+    navigateToHome,
+  } = useFinish();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 flex items-center justify-center p-4 relative overflow-hidden">
@@ -288,12 +255,20 @@ export default function FinishPage() {
                   </p>
                 </div>
                 
-                <button
-                  onClick={() => router.push('/')}
-                  className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 cursor-pointer"
-                >
-                  🏠 最初に戻る
-                </button>
+                <div className="flex justify-center space-x-4">
+                  <button
+                    onClick={navigateToExplanation}
+                    className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 cursor-pointer"
+                  >
+                    📚 問題解説を見る
+                  </button>
+                  <button
+                    onClick={navigateToHome}
+                    className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 cursor-pointer"
+                  >
+                    🏠 最初に戻る
+                  </button>
+                </div>
               </div>
             </div>
           </div>

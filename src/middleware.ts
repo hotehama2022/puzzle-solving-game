@@ -55,10 +55,19 @@ export function middleware(request: NextRequest) {
     }
   }
   
+  // finishで始まるパスをチェック
+  if (request.nextUrl.pathname.startsWith('/finish')) {
+    // scienceクッキーの存在をチェック（基本認証のみ）
+    if (!scienceCookie || scienceCookie.value !== process.env.NEXT_PUBLIC_AUTH) {
+      // ログイン画面にリダイレクト
+      return NextResponse.redirect(new URL('/', request.url));
+    }
+  }
+  
   return NextResponse.next();
 }
 
 // middlewareを適用するパスを指定
 export const config = {
-  matcher: ['/q1/:path*', '/q2/:path*', '/q3/:path*', '/q4/:path*']
+  matcher: ['/q1/:path*', '/q2/:path*', '/q3/:path*', '/q4/:path*', '/finish/:path*']
 };

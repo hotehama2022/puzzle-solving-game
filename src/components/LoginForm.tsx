@@ -129,33 +129,52 @@ export default function LoginForm() {
             </div>
             
             <div className="space-y-3">
-              {/* 隠しログインのヒント */}
+              {/* 隠しログインのヒント1 */}
+              <div className="border border-white/20 rounded-lg overflow-hidden">
+                <button
+                  onClick={() => toggleHint('hint0')}
+                  className="w-full px-4 py-3 bg-white/5 hover:bg-white/10 text-left text-white font-medium transition-colors flex items-center justify-between cursor-pointer"
+                >
+                  <span>📖 ヒント1</span>
+                  <span className={`transform transition-transform ${expandedHint === 'hint0' ? 'rotate-180' : ''}`}>
+                    ▼
+                  </span>
+                </button>
+                {expandedHint === 'hint0' && (
+                  <div className="px-4 py-3 bg-white/5 text-white/80 text-sm">
+                    <p className="mt-2">あらすじを確認してみてください。</p>
+                    <p className="mt-2 text-yellow-300">💡 そこには重要な手がかりが隠されています...</p>
+                  </div>
+                )}
+              </div>
+
+              {/* 隠しログインのヒント2 */}
               <div className="border border-white/20 rounded-lg overflow-hidden">
                 <button
                   onClick={() => toggleHint('hint1')}
                   className="w-full px-4 py-3 bg-white/5 hover:bg-white/10 text-left text-white font-medium transition-colors flex items-center justify-between cursor-pointer"
                 >
-                  <span>🎨 ヒント1: 画面の色を変えよう</span>
+                  <span>🎨 ヒント2</span>
                   <span className={`transform transition-transform ${expandedHint === 'hint1' ? 'rotate-180' : ''}`}>
                     ▼
                   </span>
                 </button>
                 {expandedHint === 'hint1' && (
                   <div className="px-4 py-3 bg-white/5 text-white/80 text-sm">
-                    <p>あらすじを読むと、元々はこの画面はオレンジだったことがわかります。</p>
+                    <p>「オレンジ色に染まった PC 画面だけ・・・」ここから、元々この画面はオレンジだったことがわかります。</p>
                     <p className="mt-2">さてこの画面をオレンジにする方法何かあるでしょうか？</p>
                     <p className="mt-2 text-yellow-300">💡 背景を変えられる画面があったはずです...</p>
                   </div>
                 )}
               </div>
 
-              {/* ヒント2 */}
+              {/* ヒント3 */}
               <div className="border border-white/20 rounded-lg overflow-hidden">
                 <button
                   onClick={() => toggleHint('hint2')}
                   className="w-full px-4 py-3 bg-white/5 hover:bg-white/10 text-left text-white font-medium transition-colors flex items-center justify-between cursor-pointer"
                 >
-                  <span>🧪 ヒント2: 薬品調合で背景を変える</span>
+                  <span>🧪 ヒント3</span>
                   <span className={`transform transition-transform ${expandedHint === 'hint2' ? 'rotate-180' : ''}`}>
                     ▼
                   </span>

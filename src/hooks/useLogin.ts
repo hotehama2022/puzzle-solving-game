@@ -32,7 +32,9 @@ export const useLogin = () => {
     
     // BCAAの場合は専用ページに遷移
     if (password.toUpperCase() === process.env.NEXT_PUBLIC_Q4_ANSWER) {
+      Cookies.set('science', process.env.NEXT_PUBLIC_AUTH || '', { expires: 7 });
       setError('');
+      
       router.push('/finish');
       return;
     }

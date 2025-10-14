@@ -243,7 +243,7 @@ export default function FinishPage() {
                     <h4 className="text-yellow-200 font-bold text-lg">最終ミッション</h4>
                   </div>
                   <p className="text-yellow-100 text-sm mb-3 leading-relaxed">
-                    謎解きの証明として、GoogleFormに以下の言葉を入力してください：
+                    謎解きの証明として、Slackの謎解きワークフローに以下の言葉を入力してください：
                   </p>
                   <div className="bg-yellow-800/50 rounded-lg p-3 border border-yellow-400/30">
                     <code className="text-yellow-200 text-lg font-bold font-mono">

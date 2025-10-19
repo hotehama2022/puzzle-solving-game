@@ -166,14 +166,17 @@ export default function Q3Theme() {
                     onKeyPress={handleKeyboardInput}
                     layout={{
                       'default': [
-                        'ア カ サ タ ナ ハ マ ヤ ラ ワ',
-                        'イ キ シ チ ニ ヒ ミ ユ リ ヲ',
-                        'ウ ク ス ツ ヌ フ ム ヨ ル ン',
-                        'エ ケ セ テ ネ ヘ メ レ ー',
-                        'オ コ ソ ト ノ ホ モ ロ',
-                        'ガ ギ グ ゲ ゴ ザ ジ ズ ゼ ゾ',
-                        'ダ ヂ ヅ デ ド バ ビ ブ ベ ボ',
-                        'パ ピ プ ペ ポ ッ ャ ュ ョ',
+                        'ワ ラ ヤ マ ハ ナ タ サ カ ア',
+                        'ヲ リ  ミ ヒ ニ チ シ キ イ',
+                        'ン ル ユ ム フ ヌ ツ ス ク ウ',
+                        ' レ  メ ヘ ネ テ セ ケ エ',
+                        ' ロ ヨ モ ホ ノ ト ソ コ オ',
+                        'パ バ ダ ザ ガ',
+                        'ピ ビ ヂ ジ ギ',
+                        'プ ブ ヅ ズ グ',
+                        'ペ ベ デ ゼ ゲ',
+                        'ポ ボ ド ゾ ゴ',
+                        'ー ョ ュ ャ ッ',
                         '{bksp}'
                       ]
                     }}
@@ -194,6 +197,7 @@ export default function Q3Theme() {
                       'バ': 'バ', 'ビ': 'ビ', 'ブ': 'ブ', 'ベ': 'ベ', 'ボ': 'ボ',
                       'パ': 'パ', 'ピ': 'ピ', 'プ': 'プ', 'ペ': 'ペ', 'ポ': 'ポ',
                       'ー': 'ー', 'ッ': 'ッ', 'ャ': 'ャ', 'ュ': 'ュ', 'ョ': 'ョ',
+                      ' ': '',
                       '{bksp}': '削除'
                     }}
                     theme="hg-theme-default hg-layout-default"
@@ -201,6 +205,10 @@ export default function Q3Theme() {
                       {
                         class: "hg-button-compact",
                         buttons: "ア カ サ タ ナ ハ マ ヤ ラ ワ イ キ シ チ ニ ヒ ミ リ ウ ク ス ツ ヌ フ ム ユ ル エ ケ セ テ ネ ヘ メ レ オ コ ソ ト ノ ホ モ ヨ ロ ヲ ン ガ ギ グ ゲ ゴ ザ ジ ズ ゼ ゾ ダ ヂ ヅ デ ド バ ビ ブ ベ ボ パ ピ プ ペ ポ ー ッ ャ ュ ョ"
+                      },
+                      {
+                        class: "hg-button-empty",
+                        buttons: " "
                       },
                       {
                         class: "hg-button-delete-compact",
@@ -251,6 +259,17 @@ export default function Q3Theme() {
             .hg-button-delete-compact:active {
               background-color: #b91c1c !important;
               transform: scale(0.95) !important;
+            }
+            .hg-button-empty {
+              height: 30px !important;
+              min-height: 30px !important;
+              padding: 4px 6px !important;
+              margin: 2px !important;
+              background-color: #374151 !important;
+              color: transparent !important;
+              border: 1px solid #4b5563 !important;
+              border-radius: 4px !important;
+              pointer-events: none !important;
             }
             .hg-theme-default {
               background-color: transparent !important;
